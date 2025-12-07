@@ -22,7 +22,13 @@ def main(page: ft.Page):
             greeting_text.value = f'{timestamp} Hello {name}'
             greeting_text.color = None
             name_input.value = None
-
+            greeting_text.spans = [
+                ft.TextSpan('Hello '),
+                ft.TextSpan(name, style=ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                ft.TextSpan('!')
+            ]
+            greeting_text.color = ft.Colors.BLUE_400
+            greeting_text.value = None
             greeting_history.append(f"{timestamp} - {name}")
             print(greeting_history)
             history_text.value = "История приветствий:\n" + '\n'.join(greeting_history)
@@ -45,20 +51,14 @@ def main(page: ft.Page):
         history_text.value = 'История приветствий:'
         page.update()
         print(greeting_history)
-    def sort(_):
-        greeting_history.sort(key=lambda x: x.split(" - ")[2].lower())
-        history_text.value = "История приветствий:\n" + '\n'.join(greeting_history)
-        
-        page.update()
     
     clear_button = ft.IconButton(icon=ft.Icons.DELETE, on_click=clear_history)
-    sort_button = ft.IconButton(icon=ft.Icons.SORT_BY_ALPHA, on_click=sort)
 
     # page.add(greeting_text, name_input, button_text, history_text )
 
     view_greeting_text = ft.Row([greeting_text], alignment=ft.MainAxisAlignment.CENTER)
 
-    page.add(view_greeting_text, ft.Row([name_input, button_elevated, clear_button, sort_button]), history_text)
+    page.add(view_greeting_text, ft.Row([name_input, button_elevated, clear_button]), history_text)
 
 
-ft.app(target=main)
+ft.app(target=main, view=ft.WEB_BROWSER)

@@ -7,7 +7,7 @@ def main(page: ft.Page):
     greeting_text = ft.Text(value='Hello world')
 
     greeting_history = []
-    history_text = ft.Text(value="История приветствий:")
+    history_text = ft.Text(value="История приветствий: ")
 
     # greeting_text.value = 'Привет'
     # greeting_text.color = ft.Colors.GREEN
@@ -17,20 +17,31 @@ def main(page: ft.Page):
         name = name_input.value.strip()
         
         timestamp = datetime.now().strftime("%y:%m:%d - %H:%M:%S")
-
+        
         if name:
             greeting_text.value = f'{timestamp} Hello {name}'
             greeting_text.color = None
             name_input.value = None
 
-            greeting_history.append(f"{timestamp} - {name}")
+            greeting_history.append(f"{name}  -  {timestamp}")
             print(greeting_history)
-            history_text.value = "История приветствий:\n" + '\n'.join(greeting_history)
+            history_text.value = "История приветствий: " +'\n'+ '\n'.join(greeting_history)
         else:
             greeting_text.value = 'Введите корректное имя'
             greeting_text.color = ft.Colors.RED
 
         # print(greeting_text)
+        page.update()
+
+    def clear_history(_):
+        print(greeting_history)
+        if len(greeting_history) != 0:
+            greeting_history.pop()
+            history_text.value = "История приветствий: " +'\n'+ '\n'.join(greeting_history)
+        else:
+            history_text.value = "История пуста!"
+            history_text.color = ft.Colors.RED
+
         page.update()
 
     name_input = ft.TextField(label='Введите имя', on_submit=on_button_click, expand=True)
@@ -39,26 +50,13 @@ def main(page: ft.Page):
     button_elevated = ft.ElevatedButton(text='send', on_click=on_button_click)
     button_icon = ft.IconButton(icon=ft.Icons.SEND, on_click=on_button_click)
 
-    def clear_history(_):
-        print(greeting_history)
-        greeting_history.clear()
-        history_text.value = 'История приветствий:'
-        page.update()
-        print(greeting_history)
-    def sort(_):
-        greeting_history.sort(key=lambda x: x.split(" - ")[2].lower())
-        history_text.value = "История приветствий:\n" + '\n'.join(greeting_history)
-        
-        page.update()
-    
     clear_button = ft.IconButton(icon=ft.Icons.DELETE, on_click=clear_history)
-    sort_button = ft.IconButton(icon=ft.Icons.SORT_BY_ALPHA, on_click=sort)
-
-    # page.add(greeting_text, name_input, button_text, history_text )
 
     view_greeting_text = ft.Row([greeting_text], alignment=ft.MainAxisAlignment.CENTER)
 
-    page.add(view_greeting_text, ft.Row([name_input, button_elevated, clear_button, sort_button]), history_text)
+    page.add(view_greeting_text, ft.Row([name_input, button_text, clear_button], alignment=ft.MainAxisAlignment.SPACE_BETWEEN), history_text)
 
 
-ft.app(target=main)
+ft.app(target=main, view=ft.WEB_BROWSER)
+
+

@@ -61,4 +61,4 @@ def main(page: ft.Page):
     page.add(view_greeting_text, ft.Row([name_input, button_elevated, clear_button, sort_button]), history_text)
 
 
-ft.app(target=main)
+ft.app(target=main, view=ft.WEB_BROWSER)
